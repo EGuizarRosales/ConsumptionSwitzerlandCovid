@@ -1,0 +1,120 @@
+{
+  "metaVariables": {
+    "topic": "covid19",
+    "source": "mandatory_reporting_system",
+    "publishingDate": "2024-01-23",
+    "sourceDate": "2024-01-23",
+    "valueCategory": {
+      "column": "valueCategory",
+      "columnDescription": "Defines what the property 'value' represents.",
+      "valueSet": ["cases", "hospitalizations", "deaths", "tests"]
+    }
+  },
+  "temporalVariables": {
+    "column": "temporal",
+    "columnDescription": "Temporal information of the value specified in the property 'valueCategory'.The temporal info of cases is constructed taking the earliest available of: The date of swab, the date of test, and the date the report arrived at the FOPH. In general, the temporal info of cases corresponds to the date the swab was taken.",
+    "typeColumn": "temporal_type",
+    "typeColumnDescription": "Specifies the type of temporal value in the property 'temporal'.",
+    "typeValues": ["iso_week"]
+  },
+  "groupingVariables": {
+    "georegion": {
+      "column": "georegion",
+      "columnDescription": "Geographical unit of the data record.",
+      "typeColumn": "georegion_type",
+      "typeColumnDescription": "Specifies the type of geographical unit in the property 'georegion'.",
+      "typeValues": {
+        "canton": {
+          "valueSet": ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH", "unknown"],
+          "allValue": "all"
+        },
+        "CHFL": {
+          "valueSet": "CHFL",
+          "allValue": "all"
+        },
+        "country": {
+          "valueSet": ["FL", "CH"],
+          "allValue": "all"
+        }
+      }
+    },
+    "agegroup": {
+      "column": "agegroup",
+      "columnDescription": "Age range brackets used for grouping.",
+      "typeColumn": "agegroup_type",
+      "typeColumnDescription": "Specifies the type of agegroup in the property 'agegroup'. Abbreviations: ili = influenza-like illness; ari = acute respiratory infection.",
+      "typeValues": {
+        "agegroup_ili_ari": {
+          "valueSet": ["0 - 4", "5 - 14", "15 - 29", "30 - 64", "65+", "unknown"],
+          "allValue": "all"
+        }
+      }
+    },
+    "sex": {
+      "column": "sex",
+      "columnDescription": "Sex specification used for grouping.",
+      "valueSet": ["male", "female", "unknown"],
+      "allValue": "all"
+    },
+    "testResult": {
+      "column": "testResult",
+      "columnDescription": "Test result used for grouping.",
+      "typeColumn": "testResult_type",
+      "typeColumnDescription": "Specifies from which type of test the property 'testResult' was derived. Abbreviation: pcr = polymerase chain reaction test.",
+      "typeValues": {
+        "all": {
+          "valueSet": ["positive", "negative"],
+          "allValue": "all"
+        },
+        "pcr": {
+          "valueSet": ["positive", "negative"],
+          "allValue": "all"
+        },
+        "rapid_antigen_test": {
+          "valueSet": ["positive", "negative"],
+          "allValue": "all"
+        }
+      }
+    }
+  },
+  "valueVariables": {
+    "value": {
+      "description": "Represents the value defined by the property 'valueCategory' within the given temporal unit and grouping.",
+      "valueSetOrRange": [0, 710835],
+      "nullValue": "NA",
+      "type": "integer"
+    },
+    "pop": {
+      "description": "Population number within the given temporal unit and grouping.",
+      "valueSetOrRange": [16293, 8778099],
+      "nullValue": "NA",
+      "type": "integer"
+    },
+    "prct": {
+      "description": "Proportion of the entry in the property 'value' as percent within the given temporal unit and grouping.",
+      "valueSetOrRange": [0, 100],
+      "nullValue": "NA",
+      "type": "double"
+    },
+    "incValue": {
+      "description": "Incidence value within the given temporal unit and grouping. Based on non-rounded figures of value and pop.",
+      "valueSetOrRange": [0, 19909.36],
+      "nullValue": "NA",
+      "type": "double"
+    },
+    "inc14d": {
+      "description": "Rolling 14-day incidence calculated by summing up the last 2 weeks of the property 'value' and dividing by the mean population over the last 2 weeks. This metric is right-aligned.",
+      "valueSetOrRange": [0, 11121.82],
+      "nullValue": "NA",
+      "type": "double"
+    }
+  },
+  "entryVariables": {
+    "dataComplete": {
+      "description": "Can data be assumed to be complete (few late reportings to be expected)?",
+      "valueSetOrRange": true,
+      "nullValue": "NA",
+      "type": "logical"
+    }
+  }
+}
