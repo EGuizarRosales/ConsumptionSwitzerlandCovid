@@ -1,0 +1,98 @@
+---
+title: "Group Work Report R Bootcamp HSLU HS23"
+author: "Guizar Rosales, Emmanuel, & Sidler, Tanja"
+format: pdf
+editor: visual
+bibliography: references.bib
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# install package librarian if needed
+if (!("librarian" %in% rownames(installed.packages()))) {
+  install.packages("librarian")
+}
+
+# load required packages
+librarian::shelf(
+  tidyverse,
+  readxl
+)
+```
+
+# Introduction
+
+Here we will write some introductory notes on the project.
+
+# Data Sets
+
+Here we will describe where we got our data sets from.
+
+-   [Monitoring Consumption Switzerland Data](https://drive.switch.ch/index.php/s/yLISs3KVE7ASE68?path=%2F2_ACQUIRING%20DATA#editor) as described in [@brown2023]
+
+-   [COVID data](https://idd.bag.admin.ch/diseases/covid/data)
+
+# Data Preparation
+
+```{r}
+#| label: loadData
+#| include: false
+
+# load primary datasets
+d.consumption <- read.csv("../data/MonitoringConsumptionSwitzerland/ACQ_POS_Grossregion_NOGA.csv",
+                          header = TRUE)
+d.covid <- read.csv("../data/COVID/data.csv",
+                    header = TRUE)
+
+# load auxiliary datasets
+d.geomapping <- read_xlsx("../data/MonitoringConsumptionSwitzerland/PLZ_REGION_CANTON_AGGLO_Mapping_Public.xlsx")
+
+# add columns iso_year, iso_week, and iso_year_week to d.consumption
+d.consumption <- d.consumption %>% 
+  mutate(
+    Date = as.Date(Date),
+    iso_year = isoyear(Date),
+    iso_week = isoweek(Date),
+    iso_year_week = paste0(iso_year, "-W", str_pad(iso_week, width = 2, pad = "0"))
+  )
+```
+
+```{r}
+
+# get overview of distinct values of certain variables
+d.covid %>% 
+  select(-c(temporal, value, pop, incValue, prct, inc14d)) %>% 
+  apply(2, unique)
+
+d.consumption %>% 
+  select(Region, Merchant.category) %>% 
+  apply(2, unique)
+```
+
+```{r}
+d.covid %>% 
+  filter(georegion_type == "country", georegion == "CH")
+```
+
+```{r}
+d.covid %>% 
+  filter(georegion_type == "canton") %>% 
+  group_by(georegion) %>% 
+  left_join(
+    y = distinct(d.geomapping, CANTON, REGION),
+    by = c("georegion" = "CANTON")
+  ) %>% 
+  rename(region = REGION)
+```
+
+```{r}
+# add column Region to d.covid
+d.geomapping %>% 
+  distinct(CANTON, REGION)
+
+d.covid %>% 
+  group_by(georegion_type) %>% 
+  mutate()
+```
